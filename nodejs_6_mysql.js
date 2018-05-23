@@ -23,7 +23,6 @@ connection.connect(function(err) {
 });
 
 
-
 connection.connect(function(err) {
     if(err) throw err;
     console.log('Connected!');
@@ -50,8 +49,62 @@ connection.connect(function(err) {
 });
 
 
+connection.connect(function(err) {
+    if (err) throw err;
+    console.log('Connected!');
+    
+    // Insert One Record
+    var sql = "INSERT INTO wmz.customers (name, address) VALUES ('Company Inc', 'Highway 37')";
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        // Get Inserted ID: for tables with an auto increment id field, only one row can be inserted!
+        console.log('1 record inserted, ID: ' + result.insertId);
+    });
+    
+    // Insert Multiple Records
+    var sql = "INSERT INTO customers (name, address) VALUES ?";
+    var values = [
+        ['John', 'Highway 71'],
+        ['Peter', 'Lowstreet 4'],
+        ['Amy', 'Apple ST 652'],
+        ['Hannah', 'Mountain 21'],
+        ['Michael', 'Valley 345']
+    ];
+    connection.query(sql, [values], function (err, result) {
+        if (err) throw err;
+        console.log("Number of records inserted: " + result.affectedRows);
+        /* The Result Object:
+        {
+          fieldCount: 0,
+          affectedRows: 14,
+          insertId: 0,
+          serverStatus: 2,
+          warningCount: 0,
+          message: '\'Records:14  Duplicated: 0  Warnings: 0',
+          protocol41: true,
+          changedRows: 0
+        }
+        */
+    });
 
-// 关闭connection
+    // Selecting From a Table
+   //connection.query("SELECT * FROM customers", function (err, result, fields) {
+    connection.query("SELECT name, address FROM customers", function (err, result, fields) {
+        if (err) throw err;
+
+        // The Result Object
+        console.log(result);
+        console.log(result[2].address);
+
+        // The Fields Object
+        console.log(fields);
+        console.log(fields[1].name);
+    });
+
+});
+
+
+// 关闭connection（执行node命令时，去掉此处的end()方法）
 connection.end(function(err) {
     if(err) {
         console.log(err.toString());
