@@ -1,0 +1,3 @@
+Hello content! + new content added by fs.appendFile()!
++ new content added by fs.appendFile()!
+ + new content added by fs.appendFile()!
